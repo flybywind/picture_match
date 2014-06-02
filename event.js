@@ -3,6 +3,7 @@ document.getElementById('board').onclick = function(event) {
         gameboard.lastroad = null;
     var x;
     var y;
+	// todo: 什么时候offsetX是None or undefined ?
     if (event.offsetX) {
         x = Math.floor(event.offsetX / gameboard.length);
         y = Math.floor(event.offsetY / gameboard.length);
@@ -15,16 +16,18 @@ document.getElementById('board').onclick = function(event) {
         return;
     }
     var p = gameboard.array[x][y];
-    if (!p.exit) {
-        gameboard.drawboard();
-    } else if (p.exit && (gameboard.lastpoint == null || gameboard.lastpoint.type != p.type)) {
+	// exist是否应该称之为exist ？
+	// 另外，每个都drawboard一下是干嘛?
+    if (!p.exist) {
+        //gameboard.drawboard();
+    } else if (p.exist && (gameboard.lastpoint == null || gameboard.lastpoint.type != p.type)) {
         gameboard.lastpoint = p;
-        gameboard.drawboard();
+        //gameboard.drawboard();
     } else {
         var r = gameboard.getroad(gameboard.lastpoint, p);
         if (!r) {
             gameboard.lastpoint = p;
-            gameboard.drawboard();
+            //gameboard.drawboard();
             return;
         }
         gameboard.lastroad = r;
@@ -32,8 +35,8 @@ document.getElementById('board').onclick = function(event) {
         gameboard.lastpoint = null;
         gameboard.drawboard();
         gameboard.lastroad = null;
-        tmp.exit = false;
-        p.exit = false;
+        tmp.exist = false;
+        p.exist = false;
         gameboard.pointnum -= 2;
         checkgameover();
         clearTimeout(gameboard.timerid);
@@ -63,8 +66,8 @@ document.getElementById('hint').onclick = function(event) {
     gameboard.lastroad = road;
     gameboard.drawboard();
     gameboard.lastroad = null;
-    road.list[0].exit = false;
-    road.list[road.num - 1].exit = false;
+    road.list[0].exist = false;
+    road.list[road.num - 1].exist = false;
     gameboard.pointnum -= 2;
     checkgameover();
     clearTimeout(gameboard.timerid);
@@ -90,9 +93,9 @@ document.getElementById('rearrange').onclick = function(event) {
         p1.type = p2.type;
         p2.type = tmp;
 
-        tmp = p1.exit;
-        p1.exit = p2.exit;
-        p2.exit = tmp;
+        tmp = p1.exist;
+        p1.exist = p2.exist;
+        p2.exist = tmp;
     }
     gameboard.lastpoint = null;
     gameboard.lastroad = null;

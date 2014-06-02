@@ -6,7 +6,7 @@ function point(_x, _y, _type, _status) {
     this.x = _x;
     this.y = _y;
     this.type = _type;
-    this.exit = _status;
+    this.exist = _status;
 }
 var colorArray = new Array();
 colorArray[0] = "#F48300";
@@ -23,6 +23,7 @@ point.prototype.drawArcRect = function(radius, length) {
     var top = this.y * length + 2;
     var bottom = top + length - 2;
     context.beginPath();
+	// 画圆角矩形
     context.moveTo(left + radius, top);
     context.lineTo(right - radius, top);
     context.arc(right - radius, top + radius, radius, 3 * Math.PI / 2, 2 * Math.PI, false);
@@ -33,13 +34,12 @@ point.prototype.drawArcRect = function(radius, length) {
     context.lineTo(left, top + radius);
     context.arc(left + radius, top + radius, radius, Math.PI, 3 * Math.PI / 2, false);
     context.closePath();
+    context.fill();
 }
 point.prototype.draw = function(length) {
 
     context.fillStyle = colorArray[0];
-    //context.fillRect(this.x*length+2,this.y*length+2,length-4,length-4);
     this.drawArcRect(5, length);
-    context.fill();
 
     var row = Math.floor(this.type / 5);
     var column = this.type % 5;
@@ -136,7 +136,7 @@ board.prototype.drawboard = function() {
     context.clearRect(0, 0, 800, 600);
     for (var i = 0; i < this.width + 2; i++) {
         for (var j = 0; j < this.height + 2; j++) {
-            if (this.array[i][j].exit) {
+            if (this.array[i][j].exist) {
                 this.array[i][j].draw(this.length);
             }
         }
@@ -157,14 +157,14 @@ board.prototype.checkline = function(begin, end) {
     if (begin.x == end.x) {
         var dy = (end.y > begin.y ? 1 : -1);
         for (var i = begin.y + dy; i != end.y; i += dy) {
-            if (this.array[begin.x][i].exit)
+            if (this.array[begin.x][i].exist)
                 return false;
         }
         return true;
     } else if (begin.y == end.y) {
         var dx = (end.x > begin.x ? 1 : -1);
         for (var i = begin.x + dx; i != end.x; i += dx) {
-            if (this.array[i][begin.y].exit)
+            if (this.array[i][begin.y].exist)
                 return false;
         }
         return true;
@@ -194,7 +194,7 @@ board.prototype.getroad = function(begin, end) {
             middle = this.array[end.x][begin.y];
 
 
-        if (!middle.exit && this.checkline(begin, middle) && this.checkline(middle, end)) {
+        if (!middle.exist && this.checkline(begin, middle) && this.checkline(middle, end)) {
             result = new road();
             result.add(begin);
             result.add(middle);
@@ -209,7 +209,7 @@ board.prototype.getroad = function(begin, end) {
             continue;
         var middle1 = this.array[i][begin.y];
         var middle2 = this.array[i][end.y];
-        if (!middle1.exit && !middle2.exit) {
+        if (!middle1.exist && !middle2.exist) {
             if (this.checkline(begin, middle1) && this.checkline(middle1, middle2) && this.checkline(middle2, end)) {
                 result = new road();
                 result.add(begin);
@@ -225,7 +225,7 @@ board.prototype.getroad = function(begin, end) {
             continue;
         var middle1 = this.array[begin.x][j];
         var middle2 = this.array[end.x][j];
-        if (!middle1.exit && !middle2.exit) {
+        if (!middle1.exist && !middle2.exist) {
             if (this.checkline(begin, middle1) && this.checkline(middle1, middle2) && this.checkline(middle2, end)) {
                 result = new road();
                 result.add(begin);
@@ -244,7 +244,7 @@ board.prototype.gethint = function() {
         var length = arr.length;
         for (var i = 0; i < length; i++) {
             for (var j = i + 1; j < length; j++) {
-                if (!arr[i].exit || !arr[j].exit)
+                if (!arr[i].exist || !arr[j].exist)
                     continue;
                 var road = this.getroad(arr[i], arr[j]);
                 if (road != null)
@@ -265,7 +265,9 @@ var imageArray = new Array();
 for (var i = 0; i < 4; i++)
     imageArray[i] = new Image();
 imageArray[0].src = "pkm.png";
+
 var context = document.getElementById('board').getContext('2d');
+
 imageArray[0].onload = function() {
 
     gameboard.drawboard();
@@ -286,5 +288,5 @@ imageArray[0].onload = function() {
             }, 100);
     }
 }
-
+// initial array and some property
 var gameboard = new board();
