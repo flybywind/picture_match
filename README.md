@@ -1,8 +1,5 @@
-pokemon_pic_match
+连连看游戏
 =================
 
-a picture matching game base on HTML5 
-
-basic game logic finished
-
-hint , rearrange and timeout finished
+根据shijiaxin的代码改编而来
+https://github.com/shijiaxin/pokemon_pic_match
